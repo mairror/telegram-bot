@@ -1,0 +1,12 @@
+.dockerignore
+Dockerfile
+.hadolint.yml
+.git/
+.gitignore
+.isort.cfg
+.pre-commit-config.yaml
+LICENSE
+Makefile
+README.md
+setup.cfg
+**/**/__pycache__/**

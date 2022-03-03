@@ -24,3 +24,5 @@ def logger(name: str) -> logging.Logger:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
+
+telegram_bot = logger("telegram_bot")

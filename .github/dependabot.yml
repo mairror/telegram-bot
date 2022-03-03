@@ -1,0 +1,30 @@
+# https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates
+# https://sysdogs.com/articles/automating-terraform-updates-with-dependabot
+
+# Set update schedule for GitHub Actions
+
+version: 2
+updates:
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "aacecandev"
+      - "blopezpi"
+    commit-message:
+      prefix: "[Github Actions Update dependencies]"
+
+  # Maintain dependencies for pip on telegram bot
+  - package-ecosystem: "pip"
+    directory: "/src"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "aacecandev"
+      - "blopezpi"
+    commit-message:
+      prefix: "[Pip Update dependencies]"

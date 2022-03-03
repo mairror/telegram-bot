@@ -1,0 +1,22 @@
+name: "Release Bot"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  new-release:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v2
+        id: semantic
+        with:
+          semantic_version: "18.0.1"
+          extra_plugins: |
+            @semantic-release/github@8.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
