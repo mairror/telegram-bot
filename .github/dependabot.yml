@@ -15,7 +15,7 @@ updates:
       - "aacecandev"
       - "blopezpi"
     commit-message:
-      prefix: "[Github Actions Update dependencies]"
+      prefix: "[Github]"
 
   # Maintain dependencies for pip on telegram bot
   - package-ecosystem: "pip"
@@ -27,4 +27,4 @@ updates:
       - "aacecandev"
       - "blopezpi"
     commit-message:
-      prefix: "[Pip Update dependencies]"
+      prefix: "[PIP]"
