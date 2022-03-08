@@ -1,5 +1,5 @@
 # telegram-bot
-Bot telegram 
+Bot telegram
 
 ## Converting Anaconda environment to pip requirements
 
@@ -23,3 +23,4 @@ There isn't any framework to do unit test with our code, you can check it in thi
 - [Telegram Bot Testing Suite](https://github.com/python-telegram-bot/ptbtest)
 - [Telegram Bot Testing Suite RTD](https://ptbtestsuite.readthedocs.io/en/master/?badge=master)
 - https://core.telegram.org/bots/api
+- https://api.slack.com/reference/surfaces/formatting
