@@ -1,3 +1,4 @@
+import json
 from typing import Dict
 
 import requests
@@ -107,17 +108,33 @@ Authors of this bot:
     )
 
 
-async def predict(image):
-    data = {"key": image}
+def build_text_prediction(prediction: Dict):
+    newline = "\n"
+    text = f"""
+<b>PREDICTION:</b>\n
+{newline.join([f"Face {count+1}: (Age: {pred['age']}), (Gender: {pred['gender']})"
+                for count, pred in enumerate(prediction["predictions"]) ])}
+"""
+    return text
+
+
+def predict(image):
+    data = {"image_id": image}
+    print(data)
     headers = {"X-Api-Key": API_KEY}
     telegram_bot.debug(f"Predict image {image}.")
     try:
-        r = await requests.post(API_URL + API_PREDICT_PATH, data=data, headers=headers)
+        r = requests.post(
+            API_URL + API_PREDICT_PATH, data=json.dumps(data), headers=headers
+        )
         if r.status_code == 200:
             telegram_bot.info(f"Sucessfully predicted: {r.text}")
-            return r.text
+            return build_text_prediction(json.loads(r.text))
+        else:
+            telegram_bot.error(f"Error querying the API: {r.text}.")
+            return "There was an error predicting your image."
     except Exception as e:
-        telegram_bot.error(f"There is an error when send the file: {e}.")
+        telegram_bot.error(f"There is an error when get tyhe prediction: {e}.")
 
 
 def keyboard():
@@ -172,18 +189,16 @@ def photo(update: Update, context: CallbackContext) -> None:
             bytes(update.message.photo[-1].get_file().download_as_bytearray()),
         )
     }
+
     send_photo_to_api(files)
+
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-    prediction = predict(image)
-    if prediction:
+
+    prediction_result = predict("raw/" + image)
+    if prediction_result:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f"""
-<b>PREDICTION:</b>
-
-<b>AGE: </b>{prediction["age"]}
-<b>GENDER: </b>{prediction["gender"]}
-        """,
+            text=prediction_result,
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
