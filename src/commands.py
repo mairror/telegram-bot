@@ -29,7 +29,31 @@ def send_photo_to_api(files: Dict):
         if r.status_code == 201:
             telegram_bot.info(f"File sucessfully uploaded: {r.text}")
     except Exception as e:
-        telegram_bot.error(f"There is an error when send the file: {e}.")
+        telegram_bot.error(f"There was an error sending the file: {e}.")
+
+
+def keyboard():
+    keyboard = [
+        [
+            InlineKeyboardButton("Yes!!!", callback_data="yes"),
+            InlineKeyboardButton("No", callback_data="no"),
+        ],
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    return reply_markup
+
+
+def keyboard_start():
+    keyboard = [
+        [
+            InlineKeyboardButton("Yes!!!", callback_data="YES"),
+            InlineKeyboardButton("No", callback_data="NO"),
+        ],
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    return reply_markup
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -44,9 +68,11 @@ def start(update: Update, context: CallbackContext) -> None:
     Outputs:
         None
     """
+    reply_markup = keyboard_start()
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Welcome to mairror! Do you need to guess your age?",
+        text="Welcome to mairror! Do you want me to guess your age?",
+        reply_markup=reply_markup,
     )
 
 
@@ -62,7 +88,8 @@ def text(update: Update, context: CallbackContext) -> None:
         None
     """
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="Sorry, I didn't understand you."
+        chat_id=update.effective_chat.id,
+        text="Sorry, I didn't understand you. Please send me a pic.",
     )
 
 
@@ -135,19 +162,7 @@ def predict(image):
             telegram_bot.error(f"Error querying the API: {r.text}.")
             return "There was an error predicting your image."
     except Exception as e:
-        telegram_bot.error(f"There is an error when get tyhe prediction: {e}.")
-
-
-def keyboard():
-    keyboard = [
-        [
-            InlineKeyboardButton("Yes!!!", callback_data="yes"),
-            InlineKeyboardButton("No", callback_data="no"),
-        ],
-    ]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    return reply_markup
+        telegram_bot.error(f"There is an error making the prediction: {e}.")
 
 
 def button(update: Update, context: CallbackContext) -> None:
@@ -163,11 +178,18 @@ def button(update: Update, context: CallbackContext) -> None:
     """
     query = update.callback_query
     query.answer()
-    if query.data == "yes":
+    answer = query.data
+    if answer == "yes":
         query.edit_message_text(text="I'm a great guesser!")
+    elif answer == "YES":
+        query.edit_message_text(
+            text="To start please send me a pic of yourself and I will try to guess your age and gender."
+        )
+    elif answer == "NO":
+        query.edit_message_text(text="No problem, you can come back whenever you want.")
     else:
         query.edit_message_text(
-            text="Sorry, I'll do the best of me. I need more images to improve the prediction."
+            text="Sorry, I'll do my best the next time :(. I need more images to improve my predictions."
         )
 
 
@@ -205,4 +227,4 @@ def photo(update: Update, context: CallbackContext) -> None:
             disable_web_page_preview=True,
         )
     reply_markup = keyboard()
-    update.message.reply_text("Have I guessed your age?", reply_markup=reply_markup)
+    update.message.reply_text("Did I guess your age?", reply_markup=reply_markup)
