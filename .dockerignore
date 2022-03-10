@@ -7,6 +7,11 @@ Dockerfile
 .pre-commit-config.yaml
 LICENSE
 Makefile
+pytest.ini
 README.md
+requirements.dev.txt
 setup.cfg
+setup.py
+tox.ini
 **/**/__pycache__/**
+**/**/tests/

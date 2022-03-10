@@ -1,4 +1,5 @@
 import json
+import time
 from typing import Dict
 
 import requests
@@ -193,6 +194,7 @@ def photo(update: Update, context: CallbackContext) -> None:
     send_photo_to_api(files)
 
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+    time.sleep(7)
 
     prediction_result = predict("raw/" + image)
     if prediction_result:
